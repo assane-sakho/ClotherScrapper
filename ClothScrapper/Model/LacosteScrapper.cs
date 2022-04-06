@@ -33,9 +33,8 @@ namespace ClothScrapper.Model
                 foreach (var category in categories.Skip(1))
                 {
                     var href = category.GetAttribute("href");
-                     _categoriesUrl.Add(href);
-                     Console.WriteLine(href);
-
+                    _categoriesUrl.Add(href);
+                    Console.WriteLine(href);
                 }
             }
         }
@@ -45,8 +44,6 @@ namespace ClothScrapper.Model
             _driver.Navigate().GoToUrl(url);
             Thread.Sleep(5000);
 
-            //try
-            //{
             if (!_driver.PageSource.Contains("Hors-jeu"))
             {
                 var articles = _driver.FindElements(By.XPath("//div[@data-image]"));
@@ -58,7 +55,7 @@ namespace ClothScrapper.Model
 
                         await SetSingleCloth(article, url);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
                     }
                 }
@@ -69,21 +66,17 @@ namespace ClothScrapper.Model
                     await ScrapCategory($"{_currentCategoryUrl}?page={_currentPage}");
                 }
             }
-        //}
-            //catch (Exception)
-            //{
-            //}
         }
 
         public override async Task SetSingleCloth(IWebElement article, string currentCategory)
         {
             var parent = article.FindElement(By.XPath("../../.."));
-            
+
             string img = parent.FindElement(By.TagName("img")).GetAttribute("src").Replace("_20", "_24");
 
             string price = parent.FindElement(By.ClassName("sales-price"))
                                             .Text.Replace(" €", "")
-                                            .Replace(",", ".")
+                                            .Replace(".", ",")
                                             .Trim();
 
             var cloth = new Cloth
@@ -92,7 +85,7 @@ namespace ClothScrapper.Model
                 ImageUrl = img,
                 Brand = "Lacoste",
                 Price = Convert.ToDouble(price),
-                Category = _currentCategoryUrl.Split("/").Last(x => x != "")
+                Category = $"{(_currentCategoryUrl.Contains("femme") ? "femme" : "homme")}-{_currentCategoryUrl.Split("/").Last(x => x != "")}"
             };
 
             _cloths.Add(cloth);

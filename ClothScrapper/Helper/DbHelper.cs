@@ -38,7 +38,7 @@ namespace ClothScrapper
 
         public static DbHelper GetInstance()
         {
-            if (_instance == null);
+            if (_instance == null) ;
             _instance = new DbHelper();
             return _instance;
         }

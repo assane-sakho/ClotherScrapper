@@ -101,7 +101,7 @@ namespace ClothScrapper.Model
                 string src = image.GetAttribute("src");
                 if (src.Contains("packshot"))
                 {
-                    string tmpImg = src.Split("?")[0];
+                    string tmpImg = src.Split("?").First();
                     cloth.Image = tmpImg.Split("/").Last();
                     cloth.ImageUrl = tmpImg;
                     break;

@@ -25,7 +25,7 @@ namespace ClothScrapper.API
         internal int _currentPage;
         #endregion
 
-        public Scrapper(string baseUrl, int pageToScrapPerCategory = 30)
+        public Scrapper(string baseUrl, int pageToScrapPerCategory = 8)
         {
             _baseUrl = baseUrl;
             _pageToScrapPerCategory = pageToScrapPerCategory;
@@ -69,7 +69,16 @@ namespace ClothScrapper.API
             foreach (var categoryUrl in _categoriesUrl)
             {
                 _currentCategoryUrl = categoryUrl;
-                await ScrapCategory(_currentCategoryUrl);
+                _currentPage = 1;
+
+                try
+                {
+                    await ScrapCategory(_currentCategoryUrl);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
 
             Stop();
