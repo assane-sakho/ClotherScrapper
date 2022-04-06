@@ -20,7 +20,7 @@ namespace ClothScrapper.API
         internal readonly FileHelper _fileHelper;
         internal readonly int _pageToScrapPerCategory;
         internal readonly string _baseUrl;
-        internal readonly string _categorieUrl;
+        internal string _currentCategoryUrl;
         internal List<string> _categoriesUrl;
         internal int _currentPage;
         #endregion
@@ -49,7 +49,8 @@ namespace ClothScrapper.API
 
             _js = (IJavaScriptExecutor)_driver;
 
-            _currentPage = 0;
+            _currentPage = 1;
+            _currentCategoryUrl = String.Empty;
         }
 
         /// <summary>
@@ -67,7 +68,8 @@ namespace ClothScrapper.API
 
             foreach (var categoryUrl in _categoriesUrl)
             {
-                await ScrapCategory(categoryUrl);
+                _currentCategoryUrl = categoryUrl;
+                await ScrapCategory(_currentCategoryUrl);
             }
 
             Stop();

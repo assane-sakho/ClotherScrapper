@@ -10,5 +10,6 @@ namespace ClothScrapper.Model
         public string Brand { get; set; }
         public string Category { get; set; }
         public string Image { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

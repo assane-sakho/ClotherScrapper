@@ -56,7 +56,7 @@ namespace ClothScrapper.Model
                             _js.ExecuteScript("arguments[0].scrollIntoView(false);", article);
                             if (article.Text.Contains("€"))
                             {
-                                SetSingleCloth(article, url);
+                                await SetSingleCloth(article, url);
                             }
                         }
                         catch (Exception)
@@ -67,7 +67,7 @@ namespace ClothScrapper.Model
                     if (_currentPage < _pageToScrapPerCategory)
                     {
                         _currentPage++;
-                        await ScrapCategory($"{_categorieUrl}?p={_currentPage}");
+                        await ScrapCategory($"{_currentCategoryUrl}?p={_currentPage}");
                     }
                 }
             }
@@ -101,7 +101,9 @@ namespace ClothScrapper.Model
                 string src = image.GetAttribute("src");
                 if (src.Contains("packshot"))
                 {
-                    cloth.Image = src.Split("?")[0];
+                    string tmpImg = src.Split("?")[0];
+                    cloth.Image = tmpImg.Split("/").Last();
+                    cloth.ImageUrl = tmpImg;
                     break;
                 }
             }
@@ -111,9 +113,7 @@ namespace ClothScrapper.Model
                 _cloths.Add(cloth);
                 _dbHelper.AddCloth(cloth);
 
-                string imageName = cloth.Image.Split("/").Last();
-
-                await _fileHelper.DownloadImageAsync(imageName, cloth.Category, new Uri(cloth.Image));
+                await _fileHelper.DownloadImageAsync(cloth.Image, $"Zalando/{cloth.Category}", new Uri(cloth.ImageUrl));
             }
         }
     }

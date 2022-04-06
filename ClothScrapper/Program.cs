@@ -8,8 +8,11 @@ namespace ClothScrapper
     {
         static async Task Main(string[] args)
         {
-            ZalandoScrapper zalandoScrapper = new ZalandoScrapper();
-            await zalandoScrapper.Start();
+            //ZalandoScrapper zalandoScrapper = new ZalandoScrapper();
+            //await zalandoScrapper.Start();
+
+            LacosteScrapper lacosteScrapper = new LacosteScrapper();
+            await lacosteScrapper.Start();
 
             Console.ReadLine();
         }
